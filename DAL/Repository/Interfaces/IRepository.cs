@@ -12,5 +12,6 @@ namespace Lesson3.DAL.Repository.Interfaces
         Task Delete(int id);
         Task<T> GetByName(string name);
         Task<IEnumerable<T>> Select(int skip, int take);
+        Task<IEnumerable<T>> GetAll();
     }
 }

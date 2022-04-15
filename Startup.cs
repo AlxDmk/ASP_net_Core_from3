@@ -6,6 +6,7 @@ using AutoMapper;
 using Lesson3.Controllers.Models;
 using Lesson3.DAL.Entities;
 using Lesson3.DAL.Repository;
+using Lesson3.DAL.Repository.Context;
 using Lesson3.DAL.Repository.DataBase;
 using Lesson3.DAL.Repository.Interfaces;
 using Lesson3.Mapper;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -35,6 +37,10 @@ namespace Lesson3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //string con = $"Data Source=mydb.db";
+            //services.AddDbContext<Context>(options => options.UseSqlite(Configuration.GetConnectionString("Url")));
+            services.AddDbContext<Context>();
+
             services.AddControllers();
             services.AddTransient<IRepository<PersonEntity>, PersonsRepository>();
             services.AddTransient<IService<PersonDto>, PersonService>();

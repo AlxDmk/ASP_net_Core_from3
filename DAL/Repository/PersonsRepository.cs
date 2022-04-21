@@ -5,67 +5,67 @@ using System.Threading.Tasks;
 using Lesson3.DAL.Entities;
 using Lesson3.DAL.Repository.DataBase;
 using Lesson3.DAL.Repository.Interfaces;
+using Lesson3.DAL.Repository.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lesson3.DAL.Repository
 {
     public class PersonsRepository: IRepository<PersonEntity>
     {
+        private readonly Context.Context _context;
 
-        private readonly List<PersonEntity> _dataBase ;
-        public PersonsRepository()
+        public PersonsRepository(Context.Context context)
         {
-            _dataBase = PersonsDb.PersonsDataBase;
-        }
+            _context = context;            
+        }        
 
-        public Task<PersonEntity> Get(int id)
+        public async Task<PersonEntity> Get(int id)
         {
-            var result = _dataBase.Find((x) => x.Id == id);
+            var result = await _context.Persons.FindAsync(id);
+
             if (result == null || result.IsDelete == true)
             {
                 throw new ArgumentException("Такого человека не найдено");
             }
-            return Task.FromResult(result);
+
+            return result;
         }
 
-        public Task Add(PersonEntity item)
+        public async Task Add(PersonEntity item)
         {
-            _dataBase.Add(item);
-            return Task.CompletedTask;
+            await _context.Persons.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
         
 
-        public Task Update(PersonEntity item)
+        public async Task Update(PersonEntity item)
         {
-            var result = _dataBase.Find((x) => x.Id == item.Id);
-          
-            foreach (var property in  typeof(PersonEntity).GetProperties())
-            {
-                property.SetValue(result, property.GetValue(item));
-                
-            }
-            return Task.CompletedTask;
+           _context.Persons.Update(item);
+            await _context.SaveChangesAsync();
+
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            var result = _dataBase.Find((x) => x.Id == id);
-            result?.Delete();
-            return Task.CompletedTask;
+            var item =  _context.Persons.Find(id);
+            item.IsDelete = true;
+            await _context.SaveChangesAsync();           
+
         }
 
-        public Task<PersonEntity> GetByName(string name)
+        public  Task<PersonEntity> GetByName(string name)
         {
-            var result = _dataBase.Find((x) => x.FirstName == name);
+            var result =  _context.Persons.Single(x => x.FirstName == name);
             return Task.FromResult(result);
         }
 
-        public Task<IEnumerable<PersonEntity>> Select(int skip, int take)
-        {
-            var result =
-                _dataBase.Skip(skip).Take(take).Select(x => x);
-            return Task.FromResult(result);
+        public async Task<IEnumerable<PersonEntity>> Select(int skip, int take) =>        
+            await _context.Persons.Skip(skip).Take(take).Select(x => x).ToListAsync();
 
-        }
+
+        public async Task<IEnumerable<PersonEntity>> GetAll() =>        
+             await _context.Persons.Where(x => x.IsDelete == false).ToListAsync();
+        
     }
 
     

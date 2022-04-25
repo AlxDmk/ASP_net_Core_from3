@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Lesson3.Controllers.Models;
 using Lesson3.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lesson3.Controllers
@@ -18,6 +19,7 @@ namespace Lesson3.Controllers
         }
 
         // GET /persons/{id} — получение человека по идентификатору
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
@@ -25,6 +27,7 @@ namespace Lesson3.Controllers
         }
 
         // GET /persons/search?searchTerm={term} — поиск человека по имени
+        [Authorize]
         [HttpGet("search")]
         public async Task<IActionResult> GetByName([FromQuery] string searchTerm)
         {
@@ -32,6 +35,7 @@ namespace Lesson3.Controllers
         }
 
         // GET /persons/?skip={5}&take={10} — получение списка людей с пагинацией
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Select([FromQuery] int skip, [FromQuery] int take)
         {
@@ -40,6 +44,7 @@ namespace Lesson3.Controllers
 
 
         // POST /persons — добавление новой персоны в коллекцию
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddPerson([FromBody]PersonDto person)
         {
@@ -49,6 +54,7 @@ namespace Lesson3.Controllers
         
         
         // PUT /persons — обновление существующей персоны в коллекции
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdatePerson([FromBody] PersonDto person)
         {
@@ -58,6 +64,7 @@ namespace Lesson3.Controllers
         
         
         // DELETE /persons/{id} — удаление персоны из коллекции
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson([FromRoute] int id)
         {

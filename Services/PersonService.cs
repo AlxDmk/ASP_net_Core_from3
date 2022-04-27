@@ -30,7 +30,7 @@ namespace Lesson3.Services
         public async Task Delete(int id) =>
             await _repository.Delete(id);
         
-        public async Task<PersonDto> Get(int id) =>
+        public async Task<PersonDto> Get(int id) => 
             _mapper.Map<PersonDto>(await _repository.Get(id));
      
 

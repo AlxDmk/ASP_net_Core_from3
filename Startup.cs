@@ -10,7 +10,9 @@ using Lesson3.DAL.Repository.Context;
 using Lesson3.DAL.Repository.DataBase;
 using Lesson3.DAL.Repository.Interfaces;
 using Lesson3.Mapper;
+using Lesson3.Requests.PersonRequests;
 using Lesson3.Services;
+using Lesson3.Validation.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -44,6 +46,11 @@ namespace Lesson3
             services.AddControllers();
             services.AddTransient<IRepository<PersonEntity>, PersonsRepository>();
             services.AddTransient<IService<PersonDto>, PersonService>();
+
+            services.AddScoped<IPersonByIdValidator, PersonByIdValidator>();
+            services.AddScoped<IPersonByNameValidator, PersonByNameValidator>();
+            services.AddScoped<IPersonValidator, PersonValidator>();
+            services.AddScoped<ISelectValidator, SelectValidator>();
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Lesson3", Version = "v1"}); });
 
